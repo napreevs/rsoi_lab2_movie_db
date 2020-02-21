@@ -1,0 +1,23 @@
+language: python
+python:
+  - "3.7"
+services:
+  - postgresql
+before_script:
+  - psql -c 'create database movie_db;' -U postgres
+  - psql -c 'create role movie;' -U postgres
+  - psql -c 'alter role movie login;' -U postgres
+  - psql -c 'alter user movie createdb;' -U postgres
+
+before_install:
+  - gem install bundler
+
+install:
+  - pip install -r requirements.txt
+script:
+  - cd reviews
+  - python3 manage.py test
+  - cd ../users
+  - python3 manage.py test
+  - cd ../movies
+  - python3 manage.py test
